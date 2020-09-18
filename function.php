@@ -11,9 +11,9 @@ function connect()
     return $conn;
 }
 
-function select($conn)
+function select($conn,$id)
 {
-    $sql = "SELECT * FROM info";
+    $sql = "SELECT * FROM info WHERE id = $id";
     $result = mysqli_query($conn, $sql);
 
     $arr = [];
@@ -45,6 +45,67 @@ function insert($conn)
     } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
     }
+}
+
+function selectPage($conn)
+{   
+    $offset = 0;
+    if (isset($_GET['page']) && trim($_GET['page'])!='') {
+        $offset = trim($_GET['page']);
+    }
+    
+    $sql = "SELECT * FROM info LIMIT 5 OFFSET " . $offset*5;
+    $result = mysqli_query($conn, $sql);
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+function pagginationCount($conn) 
+{   
+    $sql = "SELECT * FROM info";
+    $total = mysqli_num_rows(mysqli_query($conn, $sql)); // всего записей  
+    return ($total/5);
+}
+
+function selectAllTags($conn)
+{
+    $sql = "SELECT DISTINCT(tag) FROM tags";
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+function selectTag($conn,$tag)
+{
+    $sql = "SELECT post FROM tags wHERE tag = '" .$tag. "'";
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row['post'];
+        }
+    }
+    $sql = "SELECT * FROM info wHERE id in(".join(",",$arr).")";
+    $result = mysqli_query($conn, $sql);
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
 }
 
 function close($conn)

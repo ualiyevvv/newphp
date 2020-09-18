@@ -8,17 +8,16 @@ if (isset($_COOKIE["bd_create_success"]) && trim($_COOKIE["bd_create_success"])!
     $success = '<div class="alert alert-success" role="alert">New record created successfully<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
 }
 
-$conn = connect();
-$arr = selectPage($conn);
-$countPage = pagginationCount($conn);
-$tags = selectAllTags($conn);
-close($conn);
-
-if (isset($_GET['page']) && trim($_GET['page'])!='') {
-    $page = $_GET['page'];
+if (isset($_GET['tag']) && trim($_GET['tag'])!='') {
+    $tag = $_GET['tag'];
+    $conn = connect();
+    //$arr = selectPage($conn);
+    $tags = selectAllTags($conn);
+    $arr = selectTag($conn, $tag);
+    close($conn);
 }
 else {
-    $page = 1;
+    header("Location: /");
 }
 ?>
 <!DOCTYPE html>
@@ -33,7 +32,8 @@ else {
 
 <div class="container">
     <?=$success?>
-    <a href="ex.php">add post</a>
+    <a href="ex.php">add post</a><br>
+    post from <b><?=$_GET['tag']?></b> tag
     <div class="row col-6">
     <table class="table table-bordered">
     <thead>
@@ -66,13 +66,10 @@ else {
         <?  } ?>
     </tbody>
     </table>
-        <?php
-            for ($i = 0; $i <= $countPage; $i++){
-                echo '<a style="padding:5px;" href="index.php?page='.$i.'">'.$i.'</a>';
-            }
-        ?>
+        
     </div>
     <div class="row col-6">
+        <a href="index.php">all</a> | 
         <?php
             for ($i = 0; $i <= count($tags); $i++){
                 echo '<a style="padding:5px;" href="tags.php?tag='.$tags[$i]['tag'].'">'.$tags[$i]['tag'].'</a>';
