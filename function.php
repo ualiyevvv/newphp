@@ -108,6 +108,136 @@ function selectTag($conn,$tag)
     return $arr;
 }
 
+function selectAllCat($conn)
+{
+    $sql = "SELECT * FROM category";
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+function selectCat($conn,$category)
+{
+    $sql = "SELECT * FROM info wHERE category = " . $category;
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+function delete($conn,$id)
+{
+    $sql = "DELETE FROM info wHERE id = " . $id;
+    if ($conn->query($sql) === TRUE) {
+        $success = 'success delete';
+        return $success;
+    } 
+    else {
+        $ere = 'err delete';
+        return $ere;
+    }
+    
+}
+
+function generateHash($length = 10) 
+{
+    $symbol = "qwertyuiopasdfghjklzxcvbnmQWERTYIUGAFHJKLZVCBMN";
+    for ($i=0;$i<$length;$i++){
+        $hash .= $symbol[rand(0, strlen($symbol)-1)];
+    }
+    return $hash;
+}
+
+function selectVisits($conn,$id)
+{
+    $sql = "SELECT * FROM visits wHERE post_id = " . $id;
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+
+function selectComments($conn,$id)
+{
+    $sql = "SELECT * FROM comments wHERE post_id = " . $id;
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+
+function selectProfile($conn,$id)
+{
+    $sql = "SELECT * FROM users wHERE id = " . $id;
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr = $row;
+        }
+    }
+    return $arr;
+}
+
+function selectCartOrders($conn,$id)
+{
+    $sql = "SELECT * FROM `cart` INNER JOIN `info` ON `cart`.`post_id`=`info`.`id` WHERE user_id = $id";
+    $result = mysqli_query($conn, $sql);
+    
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    return $arr;
+}
+
+function checkCountOrder($conn,$id)
+{
+    $sql = "SELECT * FROM cart wHERE post_id = " . $id;
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    return $row;
+}
+
+function selectUserTime($conn,$id)
+{
+    $sql = "SELECT time FROM users_auth WHERE user_id = " . $id;
+    $result = mysqli_query($conn, $sql);
+
+    $arr = [];
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $arr = $row['time'];
+        }
+    }
+    return $arr;
+}
+
 function close($conn)
 {
     mysqli_close($conn);

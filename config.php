@@ -1,6 +1,6 @@
 <?php
 
 define("SERVERNAME", "localhost");
-define("USERNAME", "root");
-define("PASSWORD", "");
+define("USERNAME", "mysql");
+define("PASSWORD", "mysql");
 define("DBNAME", "newphp");
